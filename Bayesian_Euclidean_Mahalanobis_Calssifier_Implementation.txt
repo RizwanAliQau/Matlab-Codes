@@ -1,0 +1,96 @@
+%%%%%%%%%%%% Bayesian For 2 class problem %%%%%%%%%%
+p1=0.5;
+p2=0.5;
+m1=[1 1];
+m2=[3 3];
+x=[1.8 1.8];
+sigma1_sq=1;
+sigma12=0;
+sigma2_sq=1;
+sigma21=0;
+S=[sigma1_sq sigma12;sigma21 sigma2_sq];
+s_det=det(S);
+p_w1=p1*(1/((2*pi)*sqrt(s_det)))*exp(-0.5*((x-m1)*inv(S)*(x-m1)'));
+p_w2=p2*(1/((2*pi)*sqrt(s_det)))*exp(-0.5*((x-m2)*inv(S)*(x-m2)'));
+%   disp('p_w1=');
+%    p_w1=p_w1
+%    disp('p_w2');
+%    p_w2=p_w2
+if p_w1>p_w2
+  disp('given pattern belongs to class w1')
+else
+    disp('given pattern belongs to class w1')
+end
+%%%%%%%%%%% end of bayesian %%%%%%%%%%%%
+
+
+%%%%%%Loss matrix include in which take lamda12<lambda21
+%%%means that class w2 is of more importanc than 1 %%%
+lamda12=0.5;
+lamda21=1.0;
+%%% so decision rule is modified as p_w2>p_w1(lamda12/lamda21) %%%
+p_w1_risk=p_w1*(lamda12/lamda21);
+%   disp('p_w1_risk=');
+%    p_w1_risk=p_w1_risk
+%    disp('p_w2_risk');
+%    p_w2_risk=p_w2
+if p_w1_risk>p_w2
+  disp('given pattern belongs to class w1')
+else
+    disp('given pattern belongs to class w1')
+end
+%%%%% end of loss matrix results %%%%%%%
+
+%%%%%%% Euclidean distance classifier %%%%%% 
+
+eucl_dist_w1=sqrt((x-m1)'*(x-m1));
+eucl_dist_w2=sqrt((x-m2)'*(x-m2));
+
+
+if eucl_dist_w1>eucl_dist_w2
+    
+  disp('given pattern belongs to class w1')
+else
+    disp('given pattern belongs to class w1')
+end
+%%%%%% end of Euclidean classifier results %%%%%
+
+%%%%%%% Consider S and find Mahalanobis distance classifier %%%%%
+
+mah_dist_w1=sqrt((x-m1)*inv(S)*(x-m1)');
+mah_dist_w2=sqrt((x-m2)*inv(S)*(x-m2)');
+
+if mah_dist_w1>mah_dist_w2
+    
+  disp('given pattern belongs to class w1')
+else
+    disp('given pattern belongs to class w1')
+end
+
+%%%%%%%%% end of Mahalanobis dist classifier results %%%%%
+
+
+%%%%%%% Max Llikelihood parameter Estimaton  %%%%
+%%%%% Conside 2-D Gauss distribution which generate random values %%%%
+ mean=1;
+ Sigma=0.9;
+ N=200;
+ data_x=mvnrnd(mU,Sigma,N);
+ for i=1:N
+     xk__minus_u_sq(i)=(data_x(i)-mean)^2;
+ end
+sigma_hat=(1/N)*sum(xk__minus_u_sq);
+
+%%%%%% end of estimation of vaiance %%%%%
+
+%%%%%% computation of estimate of mean from 2_D given data %%%%%%
+
+ mean1=[1 -1];
+ Sigma1=[0.9 0.2;0.2 0.3] ;
+ N=200;
+ data_x=mvnrnd(mean1,Sigma1,N);
+ mean_hat=(1/N)*(sum(data_x));
+ 
+ %%%%%% end of estimation of mean %%%%%
+ 
+ 
