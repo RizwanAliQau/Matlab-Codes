@@ -1,0 +1,226 @@
+%Moments Based Classification %%%%%%%
+% 
+% CLOSE ALL  closes all the open figure windows.
+close all
+clear all
+clc
+a=imread('obj1__68.png'); %%%% 41 to 67 ;87.5000
+b=imread('obj2__59.png');%%%% 41 to 45,51 to 55  & 59 to 71 ,75%
+c=imread('obj3__71.png'); %%%%% 41 to 48,58 to 71 ; 71.8750
+  z=input('ENTER Image name');
+sum_check=sum(mean(z));
+len=length(mean(z));
+mean_check=sum_check/len;
+z1=im2double(z);
+variance_s=sum(var(z1));
+variance=variance_s/len;
+skew_s=sum(skewness(z1));
+skew=skew_s/len;
+kurt_s=sum(kurtosis(z1));
+kurt=kurt_s/len;
+probabilty=imhist(z)/(128*128);
+uniform=sum(probabilty.^2);
+% entropy=-sum(probabilty.^log2(probabilty))
+r=1;
+p=1;
+pngFiles = dir('*.png'); 
+for k = 1:length(pngFiles);%images so repeat t
+org_image = pngFiles(k).name;
+X= imread(org_image); 
+ 
+% % [a1,a2]=size(X);
+               
+
+% %%%%%%%%%%Duck%%%%%%%%%%%%%%%
+if (k<=40)
+sum_check1=sum(mean(X));
+len=length(mean(X));
+mean_check1(k)=sum_check1/len;
+x1=im2double(X);
+variance_s1=sum(var(x1));
+variance1(k)=variance_s1/len;
+skew_s1=sum(skewness(x1));
+skew1(k)=skew_s1/len;
+kurt_s1=sum(kurtosis(x1));
+kurt1(k)=kurt_s1/len;
+probabilty1=imhist(X)/(128*128);
+uniform1(k)=sum(probabilty1.^2);
+end
+
+% %%%%%%%%%%% Hammer %%%%%%%%%%%%%
+if (k>=73 && k<=112)
+sum_check2=sum(mean(X));
+len=length(mean(X));
+mean_check2(r)=sum_check2/len;
+x1=im2double(X);
+variance_s2=sum(var(x1));
+variance2(r)=variance_s2/len;
+skew_s2=sum(skewness(x1));
+skew2(r)=skew_s2/len;
+kurt_s2=sum(kurtosis(x1));
+kurt2(r)=kurt_s2/len;
+probabilty2=imhist(X)/(128*128);
+uniform2(r)=sum(probabilty2.^2);
+r=r+1;
+end
+% %%%%%%%%%%%%%hamer end %%%%%%%%%%%
+ if (k>=145 && k<=184)
+
+sum_check3=sum(mean(X));
+len=length(mean(X));
+mean_check3(p)=sum_check3/len;
+x1=im2double(X);
+variance_s3=sum(var(x1));
+variance3(p)=variance_s3/len;
+skew_s3=sum(skewness(x1));
+if (k~=154)
+skew3(p)=skew_s3/len;
+end
+kurt_s3=sum(kurtosis(x1));
+if (k~=154)
+kurt3(p)=kurt_s3/len;
+end
+probabilty3=imhist(X)/(128*128);
+uniform3(p)=sum(probabilty3.^2);
+p=p+1;
+end
+end
+count=0;
+count1=0;
+count2=0;
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+ mean_avg1=(sum(mean_check1))/40;
+ mean_avg2=(sum(mean_check2))/40;
+ mean_avg3=(sum(mean_check3))/40;
+ mean_diff1=abs(mean_avg1-mean_check);
+ mean_diff2=abs(mean_avg2-mean_check);
+ mean_diff3=abs(mean_avg3-mean_check);
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ var_avg1=(sum(variance1))/40;
+ var_avg2=(sum(variance2))/40;
+ var_avg3=(sum(variance3))/40;
+ var_diff1=abs(var_avg1-variance);
+ var_diff2=abs(var_avg2-variance);
+ var_diff3=abs(var_avg3-variance);
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ skew_avg1=(sum(skew1))/40;
+ skew_avg2=(sum(skew2))/40;
+ skew_avg3=(sum(skew3))/39;
+ skew_diff1=abs(skew_avg1-skew);
+ skew_diff2=abs(skew_avg2-skew);
+ skew_diff3=abs(skew_avg3-skew);
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ kurt_avg1=(sum(kurt1))/40;
+ kurt_avg2=(sum(kurt2))/40;
+ kurt_avg3=(sum(kurt3))/39;
+ kurt_diff1=abs(kurt_avg1-kurt);
+ kurt_diff2=abs(kurt_avg2-kurt);
+ kurt_diff3=abs(kurt_avg3-kurt);
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%
+ uniform_avg1=(sum(uniform1))/40;
+ uniform_avg2=(sum(uniform2))/40;
+ uniform_avg3=(sum(uniform3))/40;
+ uniform_diff1=abs(uniform_avg1-uniform);
+ uniform_diff2=abs(uniform_avg2-uniform);
+ uniform_diff3=abs(uniform_avg3-uniform);
+ %%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%Duck %%%%%%%%%%%
+if(mean_diff1 < mean_diff2 )%%% 1
+    if(mean_diff1 < mean_diff3 )
+    count=count+1;
+    end
+end
+if(var_diff1 < var_diff2 ) %%%% 2
+    if (var_diff1 < var_diff3 )
+    count=count+1;
+    end
+end
+if(skew_diff1 < skew_diff2) %%%% 3
+    if (skew_diff1 < skew_diff3)
+    count=count+1;
+    end
+end
+if(kurt_diff1 < kurt_diff2) %%%% 4
+    if (kurt_diff1 < kurt_diff3)
+    count=count+1;
+    end
+end
+if(uniform_diff1 < uniform_diff2) %%%% 5
+    if (uniform_diff1 < uniform_diff3)
+    count=count+1;
+    end
+end
+
+
+
+if (count>=4) 
+    disp('The object belongs to duck group')
+end 
+%%%%%%%%%%%%% Duck Check End %%%%%%%
+%%%%%%%%%%% Hammer start check %%%%%%%%
+if(mean_diff2 < mean_diff1 )%%% 1
+    if(mean_diff2 < mean_diff3 )
+    count1=count1+1;
+    end
+end
+if(var_diff2 < var_diff1 ) %%%% 2
+    if (var_diff2 < var_diff3 )
+    count1=count1+1;
+    end
+end
+if(skew_diff2 < skew_diff1) %%%% 3
+    if (skew_diff2 < skew_diff3)
+    count1=count1+1;
+    end
+end
+if(kurt_diff2 < kurt_diff1) %%%% 4
+    if (kurt_diff2 < kurt_diff3)
+    count1=count1+1;
+    end
+end
+if(uniform_diff2 < uniform_diff1) %%%% 5
+    if (uniform_diff2 < uniform_diff3)
+    count1=count1+1;
+    end
+end
+
+
+
+if (count1>=3) 
+    disp('The object belongs to hameer group')
+end 
+
+%%%%%%%%%%% car start check %%%%%%%%
+if(mean_diff3 < mean_diff1 )%%% 1
+    if(mean_diff3 < mean_diff2 )
+    count2=count2+1;
+    end
+end
+if(var_diff3 < var_diff1 ) %%%% 2
+    if (var_diff3 < var_diff2 )
+    count2=count2+1;
+    end
+end
+if(skew_diff3 < skew_diff1) %%%% 3
+    if (skew_diff3 < skew_diff2)
+    count2=count2+1;
+    end
+end
+if(kurt_diff3 < kurt_diff1) %%%% 4
+    if (kurt_diff3 < kurt_diff2)
+    count2=count2+1;
+    end
+end
+if(uniform_diff3 < uniform_diff1) %%%% 5
+    if (uniform_diff3 < uniform_diff2)
+    count2=count2+1;
+    end
+end
+
+
+
+if (count2>=3) 
+    disp('The object belongs to car group')
+end 
+%  disp('moments gives 78.1250 cumulative correct results');

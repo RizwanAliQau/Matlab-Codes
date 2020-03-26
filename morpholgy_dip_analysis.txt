@@ -1,0 +1,264 @@
+%Morphlogy Based Classification %%%%%%%
+
+% CLOSE ALL  closes all the open figure windows.
+close all
+clear all
+clc
+a=imread('obj1__45.png'); %%%% 41 to 66 ,;84.3750
+b=imread('obj2__51.png');%%%% 41,45 to 55,58 & 60 to 71 ,87.50
+c=imread('obj3__65.png'); %%%%% 41 to 48,59 to 71 ; 68.7500
+  z=input('ENTER Image name');
+se=[1 1 1;1 1 1;1 1 1];
+c1=imdilate(z,se);
+c3=imerode(z,se);
+
+chec=c1-c3;
+final1=length(find(chec));
+ a1=[1 0 0;0 1 0;0 0 1];
+% z=0;
+catg2=0;
+p=1;
+r=1;
+x1_dir=0;
+x2_dir=0;
+x3_dir=0;
+y1_dir=0;
+y2_dir=0;
+y3_dir=0;
+n=1;
+pngFiles = dir('*.png'); 
+for k = 1:length(pngFiles);%images so repeat t
+org_image = pngFiles(k).name;
+X= imread(org_image); 
+size(X);
+X=X(1:length(X),1:length(X));
+
+% [a1,a2]=size(X);
+% [cA1,cH1,cV1,cD1] = dwt2(X,'haar');               
+% Images coding. 
+%%%%%%%%%%Duck%%%%%%%%%%%%%%%
+if (k<=40)
+
+a=imdilate(X,se);
+B=imerode(X,se);
+finalc1=a-B;
+for c=1:128
+    for c1=2:2:128-1
+        if (finalc1(c,c1)~=0 && finalc1(c,c1-1)~=0 || finalc1(c,c1)~=1 && finalc1(c,c1+1)~=1)
+            x1_dir=x1_dir+1;
+        end
+    end
+    c1=2;
+    
+end
+
+c1_dir(k)=x1_dir;
+morg1(k)=length(find(finalc1));
+x1_dir=0;
+for j=1:128
+    for i=2:2:128-1
+        if (finalc1(i,j)~=0 && finalc1(i-1,j)~=0 || finalc1(i,j)~=0 && finalc1(i+1,j)~=0)
+            y1_dir=y1_dir+1;
+        end
+    end
+    i=2;
+    
+end
+c11_dir(k)=y1_dir;
+y1_dir=0;
+% r=r+1;
+end
+%%%%%%%%%%%%%%%%Duck End %%%%%%%%%%%
+c=1;
+c1=2;
+j=1;
+i=2;
+%%%%%%%%%%% Hammer %%%%%%%%%%%%%
+if (k>=73 && k<=112)
+
+a=imdilate(X,se);
+B=imerode(X,se);
+finalc2=a-B;
+for c=1:128
+    for c1=2:2:128-1
+        if (finalc2(c,c1)~=0 && finalc2(c,c1-1)~=0 || finalc2(c,c1)~=0 && finalc2(c,c1+1)~=0)
+            x2_dir=x2_dir+1;
+        end
+    end
+    j=2;
+    
+end
+c2_dir(p)=x2_dir;
+x2_dir=0;
+morg2(p)=length(find(finalc2));
+for j=1:128
+    for i=2:2:128-1
+        if (finalc2(i,j)~=0 && finalc2(i-1,j)~=0 || finalc2(i,j)~=0 && finalc2(i+1,j)~=0)
+            y2_dir=y2_dir+1;
+        end
+    end
+    i=2;
+    
+end
+c12_dir(k)=y2_dir;
+y2_dir=0;
+p=p+1;
+end
+c=1;
+c1=2;
+j=1;
+i=2;
+
+%%%%%%%%%%%%%hamer end %%%%%%%%%%%
+if (k>=145 && k<=184)
+a=imdilate(X,se);
+B=imerode(X,se);
+finalc2=a-B;
+for c=1:128
+    for c1=2:2:128-1
+        if (finalc2(c,c1)~=1 && finalc2(c,c1-1)~=0 || finalc2(c,c1)~=1 && finalc2(c,c1+1)~=0)
+            x3_dir=x3_dir+1;
+        end
+    end
+    j=2;
+    
+end
+c3_dir(n)=x3_dir;
+x3_dir=0;
+morg3(n)=length(find(finalc2));
+for j=1:128
+    for i=2:2:128-1
+        if (finalc2(i,j)~=0 && finalc2(i-1,j)~=0 || finalc2(i,j)~=0 && finalc2(i+1,j)~=0)
+            y3_dir=y3_dir+1;
+        end
+    end
+    i=2;
+    
+end
+c13_dir(n)=y3_dir;
+y3_dir=0;
+n=n+1;
+end
+end
+
+% avg1=(sum(c1_dir))/40;
+% avg2=(sum(c2_dir))/40;
+% catg1_check=abs(final1-avg1);
+% catg2_check=abs(final1-avg2);
+% catg2=catg2/r;
+% corre=sum(sum(corr(z,c1)));
+% corrd=sum(sum(corr(catg2,c1)));
+% if(catg1_check < catg2_check )
+%     disp('The object belongs to duck group')
+% else
+%  disp('The object belongs to hammer')
+% end
+
+%%%%%%%%%%%
+x_dir=0;
+y_dir=0;
+for i=1:128
+    for j=2:2:128-1
+        if (chec(i,j)~=0 && chec(i,j-1)~=0 || chec(i,j)~=0 && chec(i,j+1)~=0)
+            x_dir=x_dir+1;
+        end
+    end
+    j=2;
+    
+end
+for j=1:128
+    for i=2:2:128-1
+        if (chec(i,j)~=0 && chec(i-1,j)~=0 || chec(i,j)~=0 && chec(i+1,j)~=0)
+            y_dir=y_dir+1;
+        end
+    end
+    i=2;
+    
+end
+%%%%%%
+count=0;
+count1=0;
+count2=0;
+%%%%%%%%%%%%%%%%%
+avg1=(sum(c1_dir))/40
+avg2=(sum(c2_dir))/40
+avg3=(sum(c3_dir))/40
+catg1_check=abs(x_dir-avg1);
+catg2_check=abs(x_dir-avg2);
+catg3_check=abs(x_dir-avg3);
+if(catg1_check < catg2_check ) %%%% 1
+    if (catg1_check < catg3_check)
+    count=count+1;
+    end
+end
+if(catg2_check < catg1_check ) %%%% 2
+    if (catg2_check < catg3_check)
+    count1=count1+1;
+    end
+end
+if(catg3_check < catg1_check ) %%%% 3
+    if (catg3_check < catg2_check)
+    count2=count2+1;
+    end
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%5
+avg11=(sum(morg1))/40;
+avg21=(sum(morg2))/40;
+avg31=(sum(morg3))/40;
+catg11_check=abs(final1-avg11);
+catg21_check=abs(final1-avg21);
+catg31_check=abs(final1-avg31);
+if(catg11_check < catg21_check ) %%% 1
+    if(catg11_check < catg31_check )
+    count=count+1;
+    end
+end
+if(catg21_check < catg11_check ) %%%% 2
+    if (catg21_check < catg31_check)
+    count1=count1+1;
+    end
+end
+if(catg31_check < catg11_check ) %%%% 3
+    if (catg31_check < catg21_check)
+    count2=count2+1;
+    end
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%
+avg13=(sum(c11_dir))/40;
+avg22=(sum(c12_dir))/40;
+avg32=(sum(c13_dir))/40;
+catg12_check=abs(y_dir-avg13);
+catg22_check=abs(y_dir-avg22);
+catg32_check=abs(y_dir-avg32);
+if(catg12_check < catg22_check )%%% 1
+    if(catg12_check < catg32_check )
+    count=count+1;
+    end
+end
+if(catg22_check < catg12_check ) %%%% 2
+    if (catg22_check < catg32_check)
+    count1=count1+1;
+    end
+end
+if(catg32_check < catg12_check ) %%%% 3
+    if (catg32_check < catg22_check)
+    count2=count2+1;
+    end
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+
+if (count>=2) %%% 1
+    disp('The object belongs to duck group')
+end 
+if (count1>=2) %%%% 2
+ disp('The object belongs to hammer')
+end
+if (count2>=2) %%% 3
+ disp('The object belongs to car')
+end
+if (count<2 && count1 <2 && count2<2)
+      disp(' belongs to other group')
+end
+     
+ disp('Morphology gives 80.2083 cumulative correct results');
