@@ -1,0 +1,190 @@
+%wavelet based compression sub-band coding
+
+% CLOSE ALL  closes all the open figure windows.
+close all
+clear all
+clc
+i=1;
+j=1;
+%%%%%%%%%%%%%%%%%Testing Images %%%%%%%%%%%
+
+x=imread('obj1__44.png'); %%%% 41 to 47,50 to 51 & 55 to 71 ;84.3750
+y=imread('obj2__71.png');%%%% 41 to 46,58 to 71 ;65.6250
+z=imread('obj3__67.png');%%%% 41 to 47,50 to 51,55 to 71 ; 84.3750
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%Enter Image to check %%%%%%%%
+
+  c=input('ENTER Image name');
+  [C,S] = wavedec2(c,1,'haar');
+c1=wrcoef2('h',C,S,'haar',1);
+V1= wrcoef2('v',C,S,'haar',1);
+D1= wrcoef2('d',C,S,'haar',1);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+se=[1 1 1;1 1 1;1 1 1];
+
+% z=0;
+catg2=0;
+% p=1;
+% r=1;
+pngFiles = dir('*.png'); 
+for k = 1:length(pngFiles);%images so repeat t
+org_image = pngFiles(k).name;
+X= imread(org_image); 
+size(X);
+X=X(1:length(X),1:length(X));
+
+[a1,a2]=size(X);
+[cA1,cH1,cV1,cD1] = dwt2(X,'haar');               
+ 
+%%%%%%%%%%%%% GROUP # 1 : DUCK PROTYPE (40 Images out of 72  ) %%%%%%%%
+if (k<=40)
+[C,S] = wavedec2(X,1,'haar');
+H11=wrcoef2('h',C,S,'haar',1);
+V11= wrcoef2('v',C,S,'haar',1);
+D11= wrcoef2('d',C,S,'haar',1);
+z=sum(sum(corrcoef(c1,H11)));
+z1=sum(sum(corrcoef(V1,V11)));
+z2=sum(sum(corrcoef(D1,D11)));
+catg1(k)=z;
+catg11(k)=z1;
+catg12(k)=z2;
+a=imdilate(X,se);
+B=imerode(X,se);
+final=a-B;
+mor(k)=length(find(final));
+
+% p=p+1;
+end
+%%%%%%%%%%%%%%%%% END DUCK %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% GROUP # 2 : Hammer PROTYPE (40 Images out of 72  ) %%%%%%%%
+if (k>=73 && k<=112)
+    [C,S] = wavedec2(X,1,'haar');
+H21=wrcoef2('h',C,S,'haar',1);
+V12= wrcoef2('v',C,S,'haar',1);
+D12= wrcoef2('d',C,S,'haar',1);
+N=sum(sum(corrcoef(c1,H21)));
+N1=sum(sum(corrcoef(V1,V12)));
+N2=sum(sum(corrcoef(D1,D12)));
+catg2(i)=N;
+catg21(i)=N1;
+catg22(i)=N2;
+% r=r+1;
+a=imdilate(X,se);
+B=imerode(X,se);
+final=a-B;
+mor1(i)=length(find(final));
+i=i+1;
+end
+%%%%%%%%%%%%%%%%% END Hammer %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% GROUP # 3 : Car PROTYPE (40 Images out of 72  ) %%%%%%%%
+
+ if (k>=145 && k<=184)
+    [C,S] = wavedec2(X,1,'haar');
+H31=wrcoef2('h',C,S,'haar',1);
+V32= wrcoef2('v',C,S,'haar',1);
+D33= wrcoef2('d',C,S,'haar',1);
+M=sum(sum(corrcoef(c1,H31)));
+M1=sum(sum(corrcoef(V1,V32)));
+M2=sum(sum(corrcoef(D1,D33)));
+catg3(j)=M;
+catg31(j)=M1;
+catg32(j)=M2;
+
+% r=r+1;
+% a=imdilate(X,se);
+% B=imerode(X,se);
+% final=a-B;
+% mor1(k)=length(find(final));
+j=j+1;
+ end
+%%%%%%%%%%%%%%%%% END Car %%%%%%%%%%%%%%%%%
+end
+r=0;
+p=0;
+q=0;
+%%%%%%%%%%% Horizontal Feautures of three categories %%%%%
+ catg1_check=(max(catg1));
+ catg2_check=(max(catg2));
+ catg3_check=(max(catg3));
+ %%%%%%%% Vertical Feautures of three categories %%%
+ catg111_check=(max(catg11));
+ catg211_check=(max(catg21));
+ catg311_check=(max(catg31));
+ %%%%%% Diagonal Feautures of three categories %%%%
+ catg112_check=(max(catg12));
+ catg212_check=(max(catg22));
+ catg312_check=(max(catg32));
+
+ %%%%%%%%%%%%% for Duck Group Check %%%%%
+ if(catg1_check > catg2_check )
+   if ( catg1_check > catg3_check )
+r=r+1;
+   end
+ end
+ if(catg111_check > catg211_check  )
+     if ( catg111_check > catg311_check )
+r=r+1;
+     end
+ end
+ if(catg112_check > catg212_check)
+     if(catg112_check > catg312_check)
+r=r+1;
+     end
+ end
+ if (r>=2)
+ 
+         disp('The object belongs to duck group')
+         
+ end
+ %%%%%% Check for duck group End %%%%%%
+
+ %%%%%%%%%%%%% Check For Hammer Group %%%%%%
+  
+ if(catg2_check > catg1_check )
+     if(catg2_check > catg3_check)
+p=p+1;
+     end
+ end
+ if(catg211_check > catg111_check )
+     if(catg211_check > catg311_check)
+p=p+1;
+     end
+ end
+ if(catg212_check > catg112_check  )
+     if(catg212_check > catg312_check)
+p=p+1;
+     end
+ end
+ if (p>=2)
+ 
+  disp('The object belongs to hammer')
+ end
+ %%%%%% Check for Hammer group End %%%%%%
+ %%%%%%%%%%%%% Check For Car Group %%%%%%
+  
+ if(catg3_check > catg1_check )
+     if(catg3_check > catg2_check)
+q=q+1;
+     end
+ end
+ if(catg311_check > catg111_check )
+     if(catg311_check > catg211_check)
+q=q+1;
+     end
+ end
+ if(catg312_check > catg112_check  )
+     if(catg312_check > catg212_check)
+q=q+1;
+     end
+ end
+ if (q>=2)
+ 
+  disp('The object belongs to car')
+ end
+ %%%%%% Check for Car group End %%%%%%
+ if (r<2 && p <2 && q<2)
+      disp(' belongs to other group')
+ end
+     
